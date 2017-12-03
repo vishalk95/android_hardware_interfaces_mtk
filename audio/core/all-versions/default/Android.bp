@@ -14,6 +14,10 @@ cc_defaults {
         "StreamOut.cpp",
     ],
 
+    cflags: [
+        "-DSUPPRESS_MTK_AUDIO_BLOB_ERR_MSG",
+    ],
+
     defaults: ["hidl_defaults"],
 
     export_include_dirs: ["include"],
@@ -57,6 +61,7 @@ cc_library_shared {
         "-DMAJOR_VERSION=2",
         "-DMINOR_VERSION=0",
         "-include common/all-versions/VersionMacro.h",
+        "-DSUPPRESS_MTK_AUDIO_BLOB_ERR_MSG",
     ]
 }
 
@@ -74,6 +79,7 @@ cc_library_shared {
         "-DMAJOR_VERSION=4",
         "-DMINOR_VERSION=0",
         "-include common/all-versions/VersionMacro.h",
+        "-DSUPPRESS_MTK_AUDIO_BLOB_ERR_MSG",
     ]
 }
 
@@ -91,5 +97,6 @@ cc_library_shared {
         "-DMAJOR_VERSION=5",
         "-DMINOR_VERSION=0",
         "-include common/all-versions/VersionMacro.h",
+        "-DSUPPRESS_MTK_AUDIO_BLOB_ERR_MSG",
     ]
 }
