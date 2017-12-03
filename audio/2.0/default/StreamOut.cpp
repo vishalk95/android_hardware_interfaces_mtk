@@ -488,6 +488,9 @@ Result StreamOut::getPresentationPositionImpl(audio_stream_out_t* stream,
     // continuously querying it, but the stream has been stopped.
     static const std::vector<int> ignoredErrors{EINVAL, EAGAIN, ENODATA};
     Result retval(Result::NOT_SUPPORTED);
+#ifdef SUPPRESS_MTK_AUDIO_BLOB_ERR_MSG
+    if (true) return retval;
+#endif
     if (stream->get_presentation_position == NULL) return retval;
     struct timespec halTimeStamp;
     retval = Stream::analyzeStatus("get_presentation_position",
