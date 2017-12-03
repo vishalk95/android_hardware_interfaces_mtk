@@ -12,6 +12,6 @@ using android::hardware::defaultPassthroughServiceImplementation;
 int main() {
     // The GNSS HAL may communicate to other vendor components via
     // /dev/vndbinder
-    android::ProcessState::initWithDriver("/dev/vndbinder");
+    //android::ProcessState::initWithDriver("/dev/vndbinder");
     return defaultPassthroughServiceImplementation<IGnss>();
 }
