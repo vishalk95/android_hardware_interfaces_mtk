@@ -210,31 +210,23 @@ int CameraDevice::sCancelBuffer(struct preview_stream_ops* w, buffer_handle_t* b
     return getStatusT(object->mPreviewCallback->cancelBuffer(bufferId));
 }
 
-static int mMinundeqBuffers = 3;
+
 
 int CameraDevice::sSetBufferCount(struct preview_stream_ops* w, int count) {
-    CameraPreviewWindow* object = static_cast<CameraPreviewWindow*>(w); 
-    
-    mMinundeqBuffers = count;  
+    CameraPreviewWindow* object = static_cast<CameraPreviewWindow*>(w);   
     if (object->mPreviewCallback == nullptr) {
-		#ifdef MTK_HARDWARE
-        ALOGW("%s: MTK fix Preview returns 0", __FUNCTION__);
-        return 0;
-        #endif 
         ALOGE("%s: camera HAL calling preview ops while there is no preview window!", __FUNCTION__);
         return INVALID_OPERATION;
     }
-
     object->cleanUpCirculatingBuffers();
-    object->mPreviewCallback->setBufferCount(count);
-    return 0;
+    return getStatusT(object->mPreviewCallback->setBufferCount(count));
 }
 
 int CameraDevice::sSetBuffersGeometry(struct preview_stream_ops* w,
                                          int width, int height, int format) {
     CameraPreviewWindow* object = static_cast<CameraPreviewWindow*>(w);
     if (object->mPreviewCallback == nullptr) {
-        ALOGE("%s: camera HAL calling preview ops while there is no preview window!", __FUNCTION__);
+        /* ALOGE("%s: camera HAL calling preview ops while there is no preview window!", __FUNCTION__); */
         return INVALID_OPERATION;
     }
 
@@ -285,30 +277,20 @@ int CameraDevice::sSetSwapInterval(struct preview_stream_ops *w, int interval) {
     return getStatusT(object->mPreviewCallback->setSwapInterval(interval));
 }
 
-
-
 int CameraDevice::sGetMinUndequeuedBufferCount(
                   const struct preview_stream_ops *w,
                   int *count) {
     const CameraPreviewWindow* object =  static_cast<const CameraPreviewWindow*>(w);
     
     
-    
-    if (object->mPreviewCallback == nullptr||count == nullptr) {
-        #ifdef MTK_HARDWARE
-        ALOGW("%s: MTK fix Preview returns 0", __FUNCTION__);
-        if (count != nullptr) {
-			*count = mMinundeqBuffers;
-		}
-        return 0;
-        #endif 
-        
+
+    if (object->mPreviewCallback == nullptr) {
         ALOGE("%s: camera HAL calling preview ops while there is no preview window!", __FUNCTION__);
         return INVALID_OPERATION;
     }
     if (count == nullptr) {
         ALOGE("%s: count is null!", __FUNCTION__);
-        return 0;
+        return BAD_VALUE;
     }
 
     Status s;
@@ -319,7 +301,7 @@ int CameraDevice::sGetMinUndequeuedBufferCount(
                 *count = cnt;
             }
         });
-    return 0;
+    return getStatusT(s);
 }
 
 CameraDevice::CameraHeapMemory::CameraHeapMemory(
@@ -604,7 +586,8 @@ void CameraDevice::initHalPreviewWindow()
     mHalPreviewWindow.set_usage = sSetUsage;
     mHalPreviewWindow.set_swap_interval = sSetSwapInterval;
 
-    mHalPreviewWindow.get_min_undequeued_buffer_count = sGetMinUndequeuedBufferCount;
+    mHalPreviewWindow.get_min_undequeued_buffer_count =
+            sGetMinUndequeuedBufferCount;
 }
 
 // Methods from ::android::hardware::camera::device::V1_0::ICameraDevice follow.

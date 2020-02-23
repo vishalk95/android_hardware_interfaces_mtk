@@ -180,6 +180,12 @@ const char CameraParameters::FOCUS_MODE_CONTINUOUS_PICTURE[] = "continuous-pictu
 const char CameraParameters::LIGHTFX_LOWLIGHT[] = "low-light";
 const char CameraParameters::LIGHTFX_HDR[] = "high-dynamic-range";
 
+// MTK
+
+const char CameraParameters::KEY_SNAPSHOT_PICTURE_FLIP[] = "snapshot-picture-filp";
+const char CameraParameters::KEY_VIDEO_HDR_MODE[] = "video-hdr";
+const char CameraParameters::KEY_VIDEO_HDR_MODES[] = "video-hdr-values";
+
 CameraParameters::CameraParameters()
                 : mMap()
 {
